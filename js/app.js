@@ -26,6 +26,7 @@ let brickPadding = 10;
 let brickOffsetTop = 30;
 let brickOffsetLeft = 30;
 let score = 0;
+let playerLives = 3;
 
 let bricks = [];
 //brick column
@@ -115,7 +116,7 @@ function collisonDetection() {
                     //brick not drawn again
                     b.status = 0;
                     score++;
-                    if(score == brickRowCount*brickColumnCount){
+                    if (score == brickRowCount * brickColumnCount) {
                         alert("You win, congraluations!");
                         document.location.reload();
                     }
@@ -125,10 +126,16 @@ function collisonDetection() {
     }
 }
 
-function drawScore(){
+function drawScore() {
     canvasShape.font = "16px Arial";
     canvasShape.fillStyle = "orange";
-    canvasShape.fillText("Score :" + score, 8,20);//8:x 20:y coordinates
+    canvasShape.fillText("Score :" + score, 8, 20);//8:x 20:y coordinates
+}
+
+function drawPlayerLives() {
+    canvasShape.font = "16px Arial";
+    canvasShape.fillStyle = "violet";
+    canvasShape.fillText("Lives Remaining :" + playerLives, canvas.width - 65, 20);//8:x 20:y coordinates
 }
 
 //function clear the canvas
@@ -138,8 +145,9 @@ function draw() {
     drawPaddle();
     drawBricks();
     drawScore();
+    drawPlayerLives();
     collisonDetection();
-    
+
     /* 
     * collison detection
     * too high or too low reverse the direction of the ball 
@@ -153,6 +161,17 @@ function draw() {
         //if ball hit left or right edges of the paddle
         if (x > paddleX && x < paddleX + paddleWidth) {
             dy = -dy;
+            playerLives--;
+            if (!playerLives) {
+                alert("GAME OVER");
+                document.location.reload();
+            } else {
+                x = canvas.width / 2;
+                y = canvas.height - 30;
+                dx = 2;
+                dy = -2;
+                paddleX = (canvas.width - paddleWidth) / 2;
+            }
             //else GAME OVER 
         } else {
             alert("GAME OVER");
@@ -178,13 +197,13 @@ function draw() {
 
 document.addEventListener("mousemove", mouseMoveHandler);
 //function to use
-function mouseMoveHandler(e){
+function mouseMoveHandler(e) {
     // pagewidth - canvas flet
     let relativeX = e.clientX - canvas.offsetLeft;
     // if mouse is within the canvas border
-    if(relativeX > 0+paddleWidth/2 && relativeX < canvas.width-paddleWidth/2){
+    if (relativeX > 0 + paddleWidth / 2 && relativeX < canvas.width - paddleWidth / 2) {
         //pointer of the paddle is in the middle
-        paddleX = relativeX - paddleWidth/2;
+        paddleX = relativeX - paddleWidth / 2;
     }
 }
 
