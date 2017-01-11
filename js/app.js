@@ -25,6 +25,7 @@ let brickHeight = 20;
 let brickPadding = 10;
 let brickOffsetTop = 30;
 let brickOffsetLeft = 30;
+let score = 0;
 
 let bricks = [];
 //brick column
@@ -113,10 +114,21 @@ function collisonDetection() {
                     dy = -dy;
                     //brick not drawn again
                     b.status = 0;
+                    score++;
+                    if(score == brickRowCount*brickColumnCount){
+                        alert("You win, congraluations!");
+                        document.location.reload();
+                    }
                 }
             }
         }
     }
+}
+
+function drawScore(){
+    canvasShape.font = "16px Arial";
+    canvasShape.fillStyle = "orange";
+    canvasShape.fillText("Score :" + score, 8,20);//8:x 20:y coordinates
 }
 
 //function clear the canvas
@@ -125,7 +137,9 @@ function draw() {
     drawBall();
     drawPaddle();
     drawBricks();
+    drawScore();
     collisonDetection();
+    
     /* 
     * collison detection
     * too high or too low reverse the direction of the ball 
@@ -160,6 +174,12 @@ function draw() {
     x += dx;
     y += dy;
 
+}
+
+document.addEventListener("mousemove", mouseMoveHandler);
+
+function mouseMoveHandler(){
+    
 }
 
 setInterval(draw, 10);
