@@ -17,10 +17,48 @@ let paddleX = (canvas.width - paddleWidth) / 2;
 // user control
 let rightPressed = false;
 let leftPressed = false;
+//brick fields
+let brickRowCount = 3;
+let brickColumnCount = 5;
+let brickWidth = 75;
+let brickHeight = 20;
+let brickPadding = 10;
+let brickOffsetTop = 30;
+let brickOffsetLeft = 30;
+
+let bricks = [];
+//brick column
+for (column = 0; column < brickColumnCount; column++) {
+    bricks[column] = [];
+    // brick row
+    for (row = 0; row < brickRowCount; row++) {
+        bricks[column][row] = { x: 0, y: 0, status: 1 };
+    }
+}
 
 
 document.addEventListener("keydown", keyDownHandler);
 document.addEventListener("keyup", keyUpHandler);
+
+
+// functions creates the bricks
+function drawBricks() {
+    for (c = 0; c < brickColumnCount; c++) {
+        for (r = 0; r < brickRowCount; r++) {
+            if (bricks[c][r].status == 1) {
+                let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+                let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+                bricks[c][r].x = brickX;
+                bricks[c][r].y = brickY;
+                canvasShape.beginPath();
+                canvasShape.rect(brickX, brickY, brickWidth, brickHeight);
+                canvasShape.fillStyle = "red";
+                canvasShape.fill();
+                canvasShape.closePath();
+            }
+        }
+    }
+}
 
 /*
  * 39 - left cursor 37 right
@@ -63,12 +101,31 @@ function drawPaddle() {
     canvasShape.closePath();
 }
 
+// function for ball hit the brick
+function collisonDetection() {
 
-//function cleart the canvas
+    for (c = 0; c < brickColumnCount; c++) {
+        for (r = 0; r < brickRowCount; r++) {
+            let b = bricks[c][r];
+            if (b.status == 1) {
+                // if the ball is between the left and righht side of the brick
+                if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+                    dy = -dy;
+                    //brick not drawn again
+                    b.status = 0;
+                }
+            }
+        }
+    }
+}
+
+//function clear the canvas
 function draw() {
     canvasShape.clearRect(0, 0, canvas.width, canvas.height);
     drawBall();
     drawPaddle();
+    drawBricks();
+    collisonDetection();
     /* 
     * collison detection
     * too high or too low reverse the direction of the ball 
