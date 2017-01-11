@@ -177,9 +177,15 @@ function draw() {
 }
 
 document.addEventListener("mousemove", mouseMoveHandler);
-
-function mouseMoveHandler(){
-    
+//function to use
+function mouseMoveHandler(e){
+    // pagewidth - canvas flet
+    let relativeX = e.clientX - canvas.offsetLeft;
+    // if mouse is within the canvas border
+    if(relativeX > 0+paddleWidth/2 && relativeX < canvas.width-paddleWidth/2){
+        //pointer of the paddle is in the middle
+        paddleX = relativeX - paddleWidth/2;
+    }
 }
 
 setInterval(draw, 10);
