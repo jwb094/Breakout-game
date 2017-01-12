@@ -17,6 +17,8 @@ let paddleX = (canvas.width - paddleWidth) / 2;
 // user control
 let rightPressed = false;
 let leftPressed = false;
+//level 
+//let gameLevel = 1;
 //brick fields
 let brickRowCount = 3;
 let brickColumnCount = 5;
@@ -25,6 +27,7 @@ let brickHeight = 20;
 let brickPadding = 10;
 let brickOffsetTop = 30;
 let brickOffsetLeft = 30;
+//playerLives
 let score = 0;
 let playerLives = 3;
 
@@ -45,6 +48,7 @@ document.addEventListener("keyup", keyUpHandler);
 
 // functions creates the bricks
 function drawBricks() {
+    //if(level = 1)
     for (c = 0; c < brickColumnCount; c++) {
         for (r = 0; r < brickRowCount; r++) {
             if (bricks[c][r].status == 1) {
@@ -60,6 +64,7 @@ function drawBricks() {
             }
         }
     }
+    //else if (level = 2)
 }
 
 /*
@@ -117,8 +122,10 @@ function collisonDetection() {
                     b.status = 0;
                     score++;
                     if (score == brickRowCount * brickColumnCount) {
+                        //level++
                         alert("You win, congraluations!");
                         document.location.reload();
+
                     }
                 }
             }
@@ -134,8 +141,8 @@ function drawScore() {
 
 function drawPlayerLives() {
     canvasShape.font = "16px Arial";
-    canvasShape.fillStyle = "violet";
-    canvasShape.fillText("Lives Remaining :" + playerLives, canvas.width - 65, 20);//8:x 20:y coordinates
+    canvasShape.fillStyle = "orange";
+    canvasShape.fillText("Lives: " +playerLives, canvas.width - 65, 20);//canvas.width - 65:x 20:y coordinates
 }
 
 //function clear the canvas
@@ -161,21 +168,20 @@ function draw() {
         //if ball hit left or right edges of the paddle
         if (x > paddleX && x < paddleX + paddleWidth) {
             dy = -dy;
-            playerLives--;
-            if (!playerLives) {
-                alert("GAME OVER");
-                document.location.reload();
+        } else {   //else ball hit the bottom playerLives deduced by 1 GAME OVER 
+            playerLives--
+            if(!playerLives){
+               alert("GAME OVER");
+               document.location.reload();
             } else {
-                x = canvas.width / 2;
-                y = canvas.height - 30;
+                x = canvas.width/2;
+                y = canvas.height-30;
                 dx = 2;
                 dy = -2;
-                paddleX = (canvas.width - paddleWidth) / 2;
+                paddleX = (canvas.width-paddleWidth)/2;
+
             }
-            //else GAME OVER 
-        } else {
-            alert("GAME OVER");
-            document.location.reload();
+          
         }
     }
     // if the center of the ball is greater than the canvas width  or less than 0
@@ -192,7 +198,7 @@ function draw() {
 
     x += dx;
     y += dy;
-
+    requestAnimationFrame(draw)
 }
 
 document.addEventListener("mousemove", mouseMoveHandler);
@@ -207,4 +213,4 @@ function mouseMoveHandler(e) {
     }
 }
 
-setInterval(draw, 10);
+draw();
